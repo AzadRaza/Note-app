@@ -46,6 +46,28 @@ button {
   background: red;
   margin-top: 5px;
 }
+
+#reportBox{
+margin-top:20px;
+text-align:center;
+}
+
+.progress{
+width:100%;
+height:20px;
+background:#ddd;
+border-radius:10px;
+overflow:hidden;
+margin-top:10px;
+}
+
+#progressBar{
+height:20px;
+width:0%;
+background:green;
+transition:0.4s;
+}
+  
 </style>
   <link rel="manifest" href="manifest.json">
 </head>
@@ -56,6 +78,15 @@ button {
 
 <textarea id="noteInput" placeholder="Write your note here..."></textarea>
 <button onclick="addNote()">Add Note</button>
+
+  <div id="reportBox">
+<h3>Task Completion</h3>
+<p id="completionText">0% completed</p>
+
+<div class="progress">
+<div id="progressBar"></div>
+</div>
+</div>
 
 <div id="notesContainer"></div>
 
@@ -75,20 +106,29 @@ function renderNotes() {
     div.className = "note";
 
     div.innerHTML = `
-      ${note}
+      <input type="checkbox" ${note.completed ? "checked" : ""} 
+      onchange="toggleTask(${index})">
+
+      ${note.text}
       <br>
+
       <button class="delete-btn" onclick="deleteNote(${index})">Delete</button>
     `;
 
     container.appendChild(div);
   });
+
+  updateCompletion();
 }
 
 function addNote() {
   const input = document.getElementById("noteInput");
   if(input.value.trim() === "") return;
 
-  notes.push(input.value);
+ notes.push({
+text: input.value,
+completed: false
+});
   saveNotes();
   renderNotes();
   input.value = "";
@@ -98,6 +138,30 @@ function deleteNote(index) {
   notes.splice(index, 1);
   saveNotes();
   renderNotes();
+}
+
+  function toggleTask(index){
+
+notes[index].completed = !notes[index].completed;
+
+saveNotes();
+
+renderNotes();
+
+}
+  function updateCompletion(){
+
+let total = notes.length;
+
+let completed = notes.filter(note => note.completed).length;
+
+let percent = total === 0 ? 0 : Math.round((completed/total)*100);
+
+document.getElementById("completionText").innerText =
+completed + " of " + total + " tasks completed (" + percent + "%)";
+
+document.getElementById("progressBar").style.width = percent + "%";
+
 }
 
 renderNotes();
