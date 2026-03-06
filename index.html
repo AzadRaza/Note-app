@@ -1,218 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simple Notes App</title>
+<title>Task Tracker</title>
 
-<style>
-body {
-  font-family: Arial;
-  background: #f2f2f2;
-  padding: 20px;
-}
+<link rel="stylesheet" href="style.css">
 
-h2 {
-  text-align: center;
-}
-
-textarea {
-  width: 100%;
-  height: 80px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-button {
-  margin-top: 8px;
-  padding: 10px;
-  width: 100%;
-  border-radius: 8px;
-  border: none;
-  background: #4CAF50;
-  color: white;
-  font-size: 16px;
-}
-
-.note {
-  background: white;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 10px;
-}
-
-.delete-btn {
-  background: red;
-  margin-top: 5px;
-}
-
-.complete-btn{
-background: green;
-margin-top:5px;
-}
-
-.incomplete-btn{
-background: orange;
-margin-top:5px;
-}
-
-.delete-btn{
-background:red;
-margin-top:5px;
-}
-  
-#reportBox{
-margin-top:20px;
-text-align:center;
-}
-
-.progress{
-width:100%;
-height:20px;
-background:#ddd;
-border-radius:10px;
-overflow:hidden;
-margin-top:10px;
-}
-
-#progressBar{
-height:20px;
-width:0%;
-background:green;
-transition:0.4s;
-}
-  
-</style>
-  <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
 
-<h2>📝 My Notes</h2>
+<div class="app">
 
-<textarea id="noteInput" placeholder="Write your note here..."></textarea>
-<button onclick="addNote()">Add Note</button>
+<h1>📝 Task Tracker</h1>
+<p class="subtitle">Track your weekly productivity</p>
 
-  <div id="reportBox">
-<h3>Task Completion</h3>
-<p id="completionText">0% completed</p>
+<!-- TASK INPUT -->
+<div class="card">
 
-<div class="progress">
-<div id="progressBar"></div>
+<input id="taskTitle" placeholder="Task title (max 100 characters)">
+
+<button id="toggleNotes">+ Add Notes</button>
+
+<textarea id="taskNotes" placeholder="Notes (optional)" style="display:none"></textarea>
+
+<button onclick="addTask()">Add Task</button>
+
 </div>
+
+<!-- WEEKLY PROGRESS -->
+
+<div class="card">
+
+<h3>Weekly Progress</h3>
+
+<div id="progressText"></div>
+
+<div class="progressBar">
+<div id="progressFill"></div>
 </div>
 
-<div id="notesContainer"></div>
+</div>
 
-<script>
-let notes = JSON.parse(localStorage.getItem("notes")) || [];
+<!-- PENDING TASKS -->
 
-function saveNotes() {
-  localStorage.setItem("notes", JSON.stringify(notes));
-}
+<div class="card">
 
-function renderNotes() {
+<h3 id="pendingTitle">Pending Tasks</h3>
 
-const container = document.getElementById("notesContainer");
-container.innerHTML = "";
+<div id="pending"></div>
 
-notes.forEach((note, index) => {
+</div>
 
-const div = document.createElement("div");
-div.className = "note";
+<!-- COMPLETED TASKS -->
 
-div.innerHTML = `
-${note.text}
-<br>
+<div class="card">
 
-<button class="complete-btn" onclick="markComplete(${index})">Complete</button>
+<h3 id="completedTitle">Completed Tasks</h3>
 
-<button class="incomplete-btn" onclick="markIncomplete(${index})">Incomplete</button>
+<div id="completed"></div>
 
-<button class="delete-btn" onclick="deleteNote(${index})">Delete</button>
-`;
+</div>
 
-container.appendChild(div);
+<!-- WEEKLY REPORT -->
 
-});
+<div class="card">
 
-updateCompletion();
+<h3>Weekly Report</h3>
 
-}
+<div id="report"></div>
 
-function addNote() {
-  const input = document.getElementById("noteInput");
-  if(input.value.trim() === "") return;
+</div>
 
- notes.push({
-text: input.value,
-completed: false
-});
-  saveNotes();
-  renderNotes();
-  input.value = "";
-}
+<!-- SETTINGS -->
 
-function deleteNote(index) {
-  notes.splice(index, 1);
-  saveNotes();
-  renderNotes();
-}
+<div class="card">
 
-  function markComplete(index){
+<h3>Settings</h3>
 
-notes[index].completed = true;
+<button onclick="exportTasks()">Export Tasks</button>
 
-saveNotes();
+<input type="file" id="importFile">
 
-renderNotes();
+<button onclick="importTasks()">Import Tasks</button>
 
-}
+<button onclick="resetTasks()">Reset All Tasks</button>
 
-  function markIncomplete(index){
+</div>
 
-notes[index].completed = false;
+</div>
 
-saveNotes();
-
-renderNotes();
-
-}
-
-  function toggleTask(index){
-
-notes[index].completed = !notes[index].completed;
-
-saveNotes();
-
-renderNotes();
-
-}
-  function updateCompletion(){
-
-let total = notes.length;
-
-let completed = notes.filter(note => note.completed).length;
-
-let percent = total === 0 ? 0 : Math.round((completed/total)*100);
-
-document.getElementById("completionText").innerText =
-completed + " of " + total + " tasks completed (" + percent + "%)";
-
-document.getElementById("progressBar").style.width = percent + "%";
-
-}
-
-renderNotes();
-</script>
-
-  <script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js')
-    .then(() => console.log("Service Worker Registered"));
-}
-  </script>
+<script src="app.js"></script>
 
 </body>
 </html>
