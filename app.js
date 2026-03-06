@@ -196,4 +196,6 @@ save();
 }
 }
 
-render();
+document.addEventListener("DOMContentLoaded", function () {
+    render();
+});
