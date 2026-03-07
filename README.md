@@ -1,2 +1,2 @@
-# Note-app
-A app use for making notes
+# Task Tracker -app
+A app use for tracking task
