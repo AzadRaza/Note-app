@@ -1,6 +1,6 @@
 {
   "name": "My Notes App",
-  "short_name": "Notes",
+  "short_name": "Task Tracker",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#f2f2f2",
