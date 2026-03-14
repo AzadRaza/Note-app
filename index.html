@@ -27,7 +27,7 @@
             line-height: 1.6;
         }
 
-        /* --- HEADER & NAVIGATION --- */
+     //   /* --- HEADER & NAVIGATION --- */
         header {
             background-color: #fff;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -158,20 +158,65 @@
         .footer-links a:hover {
             color: #fff;
         }
+
+        /* --- HAMBURGER MENU STYLES --- */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+/* --- MOBILE RESPONSIVE RULES --- */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex; /* Show the icon on mobile */
+    }
+
+    .nav-links {
+        display: none; /* Hide the regular menu */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 70px; /* Pushes the menu directly below the header */
+        left: 0;
+        background-color: #fff;
+        padding: 1rem 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    /* This class is added by JavaScript when the menu is clicked */
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        text-align: center;
+        margin: 15px 0;
+    }
+}
     </style>
 </head>
 <body>
 
     <header>
         <div class="nav-container">
-            <a href="#" class="logo">Product4U</a>
+            <a href="/" class="logo">Product4U</a>
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="#">Shop</a></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="shop/">Shop</a></li>
                 <li><a href="Recommended Resources/">Recommended Resources</a></li>
                 <li><a href="Blog/">Blog</a></li>
-                <li><a href="#">Our Mission</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="mission/">Our Mission</a></li>
+                <li><a href="contact/">Contact</a></li>
             </ul>
         </div>
     </header>
@@ -219,5 +264,94 @@
         <p style="margin-top: 1rem; font-size: 0.8rem; color: #aaa;">support@product4u.online</p>
     </footer>
 
+    <div id="cookie-banner" class="cookie-banner">
+    <p>We use cookies to serve personalized ads and analyze traffic. By continuing to use Product4U, you consent to our use of cookies. <a href="/privacy-policy.html">Read our Privacy Policy</a>.</p>
+    <button id="accept-cookies" class="btn cookie-btn">Got it!</button>
+</div>
+
+<style>
+    .cookie-banner {
+        position: fixed;
+        bottom: -150px; /* Hidden off-screen initially */
+        left: 0;
+        width: 100%;
+        background-color: #2c3e50; /* Matches your primary theme color */
+        color: #fff;
+        padding: 1rem 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 -4px 10px rgba(0,0,0,0.15);
+        transition: bottom 0.6s ease-in-out;
+        z-index: 9999;
+    }
+
+    /* Class added by JavaScript to slide the banner up */
+    .cookie-banner.show {
+        bottom: 0;
+    }
+
+    .cookie-banner p {
+        margin: 0;
+        font-size: 0.95rem;
+        text-align: center;
+    }
+
+    .cookie-banner a {
+        color: #3498db; /* Matches your accent color */
+        text-decoration: underline;
+    }
+
+    .cookie-btn {
+        background-color: #3498db;
+        border: none;
+        cursor: pointer;
+        padding: 0.6rem 1.5rem;
+        border-radius: 5px;
+        font-weight: bold;
+        color: #fff;
+        transition: background-color 0.3s;
+    }
+
+    .cookie-btn:hover {
+        background-color: #2980b9;
+    }
+
+    /* Make it side-by-side on larger screens */
+    @media (min-width: 768px) {
+        .cookie-banner {
+            flex-direction: row;
+        }
+        .cookie-banner p {
+            text-align: left;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const cookieBanner = document.getElementById("cookie-banner");
+        const acceptBtn = document.getElementById("accept-cookies");
+
+        // 1. Check if the user has already accepted cookies
+        if (!localStorage.getItem("cookiesAccepted")) {
+            // 2. If not, wait 1.5 seconds, then slide the banner up
+            setTimeout(() => {
+                cookieBanner.classList.add("show");
+            }, 1500);
+        }
+
+        // 3. When the user clicks the accept button
+        acceptBtn.addEventListener("click", function() {
+            // Save their choice in the browser's local storage
+            localStorage.setItem("cookiesAccepted", "true");
+            
+            // Slide the banner back down
+            cookieBanner.classList.remove("show");
+        });
+    });
+</script>
 </body>
 </html>
